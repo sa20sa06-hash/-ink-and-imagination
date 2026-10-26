@@ -1,0 +1,719 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080b12">
+<title>لوحة المالك | حبر وخيال</title>
+
+<style>
+:root{
+  --bg:#080b12;
+  --panel:#101722;
+  --panel2:#151e2b;
+  --gold:#d8ad68;
+  --gold2:#f4dba8;
+  --text:#f5f1e9;
+  --muted:#a5adbb;
+  --line:rgba(216,173,104,.27);
+  --green:#5ed6a0;
+  --red:#ff7777;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 12% 10%,#1b2b43 0,transparent 36%),
+    radial-gradient(ellipse at 80% 70%,#24162d 0,transparent 34%),
+    var(--bg);
+  font-family:Tahoma,Arial,sans-serif;
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,
+select:focus-visible{
+  outline:2px solid var(--gold2);
+  outline-offset:3px;
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+a{color:inherit}
+.layout{min-height:100vh}
+.sidebar{
+  position:fixed;
+  right:0;top:0;bottom:0;
+  z-index:20;
+  width:245px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  padding:20px 14px;
+  overflow-y:auto;
+  background:rgba(7,10,16,.97);
+  border-left:1px solid var(--line);
+}
+.brand{
+  text-align:center;
+  padding:8px 0 17px;
+  border-bottom:1px solid var(--line);
+}
+.brand-mark{font-size:32px;color:var(--gold)}
+.brand h1{font-size:22px;color:var(--gold2);margin:6px 0}
+.brand p{font-size:9px;letter-spacing:2px;color:var(--muted);margin:0}
+.owner{
+  display:flex;align-items:center;gap:10px;
+  padding:10px;border:1px solid var(--line);
+  border-radius:12px;background:var(--panel);
+}
+.avatar{
+  flex-shrink:0;width:40px;height:40px;
+  display:grid;place-items:center;border-radius:50%;
+  border:1px solid var(--gold);
+  background:linear-gradient(135deg,#30263c,#a77a43);
+  font-size:20px;
+}
+.owner strong{display:block;font-size:12px}
+.owner small{display:block;margin-top:5px;color:var(--muted);font-size:10px}
+.nav{display:grid;gap:5px}
+.nav button{
+  display:flex;align-items:center;gap:10px;
+  width:100%;padding:10px;
+  border:1px solid transparent;border-radius:9px;
+  color:#d7dce5;background:transparent;
+  text-align:right;font-size:12px;transition:.2s;
+}
+.nav button:hover,.nav button.active{
+  color:var(--gold2);
+  border-color:var(--line);
+  background:linear-gradient(100deg,rgba(216,173,104,.19),rgba(216,173,104,.025));
+}
+.ico{width:22px;text-align:center;color:var(--gold);font-size:17px}
+.sidebar-bottom{display:grid;gap:7px;margin-top:auto}
+.sidebar-bottom button{
+  padding:10px;border:1px solid #252d39;border-radius:9px;
+  background:transparent;color:var(--muted);
+  text-align:right;font-size:11px;
+}
+.sidebar-bottom button:hover{border-color:var(--line);color:var(--gold2)}
+.main{margin-right:245px;min-width:0}
+.topbar{
+  position:sticky;top:0;z-index:10;
+  min-height:62px;padding:11px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border-bottom:1px solid var(--line);
+  background:rgba(8,11,18,.88);
+  backdrop-filter:blur(14px);
+}
+.top-actions,.topbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.topbar small{font-size:11px;color:var(--muted)}
+.pill{
+  padding:8px 11px;border:1px solid var(--line);
+  border-radius:20px;background:#111722;color:var(--gold2);
+  font-size:11px;
+}
+.mobile-menu{display:none}
+.content{max-width:1350px;margin:auto;padding:21px}
+.hero{
+  min-height:205px;position:relative;overflow:hidden;
+  display:flex;align-items:center;
+  padding:25px;border:1px solid #8b693b;border-radius:15px;
+  background:
+    linear-gradient(90deg,rgba(5,9,16,.30),rgba(5,9,16,.93)),
+    radial-gradient(ellipse at 18% 30%,#bb8755 0,transparent 28%),
+    linear-gradient(130deg,#33425c,#171a2b 53%,#402640);
+  box-shadow:0 12px 35px #0005;
+}
+.hero:before{
+  content:"✦   ✧   ·   ✦   ·   ✧";
+  position:absolute;left:16px;top:15px;
+  color:var(--gold);letter-spacing:6px;opacity:.7;
+}
+.hero:after{
+  content:"♜";position:absolute;left:6%;bottom:-75px;
+  color:rgba(216,173,104,.09);font-size:220px;
+  pointer-events:none;
+}
+.hero-copy{position:relative;z-index:1;max-width:640px}
+.eyebrow{font-size:10px;letter-spacing:2px;color:var(--gold)}
+.hero h2{font-size:clamp(24px,4vw,36px);color:var(--gold2);margin:12px 0}
+.hero p{max-width:500px;font-size:12px;line-height:2;color:#d4d8e0}
+.quote{font-size:12px;color:var(--gold);line-height:2}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.btn{
+  padding:9px 12px;border:1px solid var(--line);border-radius:8px;
+  background:#111722;color:var(--gold2);font-size:11px;
+}
+.btn.primary{
+  border-color:transparent;
+  color:#17110a;font-weight:bold;
+  background:linear-gradient(135deg,#f4dba8,#b98243);
+}
+.btn:hover{filter:brightness(1.12)}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:24px 0 12px;
+}
+.section-head h3{margin:0;font-size:16px}
+.section-head small{font-size:10px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:15px}
+.stat{
+  min-width:0;padding:13px;
+  border:1px solid var(--line);border-radius:12px;
+  background:linear-gradient(145deg,#17202d,#0b1018);
+}
+.stat-top{display:flex;align-items:center;justify-content:space-between;gap:5px}
+.stat-label{font-size:10px;color:var(--muted)}
+.stat-icon{font-size:20px;color:var(--gold)}
+.stat-number{font-size:24px;font-weight:bold;margin:12px 0 6px}
+.stat-note{font-size:9px;color:var(--green);line-height:1.7}
+.alerts{
+  border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:rgba(14,20,30,.94);
+}
+.alert-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:13px;border-bottom:1px solid #ffffff10;
+}
+.alert-title strong{font-size:12px}
+.alert-row{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 13px;border-bottom:1px solid #ffffff0b;
+  font-size:11px;
+}
+.alert-row:last-child{border-bottom:0}
+.alert-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.alert-row span:nth-child(2){flex:1;line-height:1.8}
+.alert-row time{font-size:9px;color:var(--muted);white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.feature{
+  position:relative;min-width:0;overflow:hidden;
+  padding:0;text-align:right;color:var(--text);
+  border:1px solid var(--line);border-radius:12px;
+  background:#101722;transition:transform .2s,border-color .2s;
+}
+.feature:hover{transform:translateY(-3px);border-color:#e2bd7e}
+.feature-art{
+  position:relative;height:105px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:39px;
+  background:
+    radial-gradient(ellipse at 50% 65%,rgba(216,173,104,.35),transparent 45%),
+    linear-gradient(135deg,#35425a,#111722 58%,#39273d);
+}
+.feature-art:before{
+  content:"";position:absolute;inset:7px;
+  border:1px solid #d8ad6840;border-radius:7px;
+}
+.feature-art:after{
+  content:"✦  ·  ✧";position:absolute;left:8px;top:8px;
+  color:#e3bc79;font-size:10px;letter-spacing:4px;
+}
+.feature-art span{filter:drop-shadow(0 0 10px #d8ad6860)}
+.feature-body{padding:10px 11px 13px}
+.feature-title{display:block;font-size:11px;font-weight:bold;line-height:1.7}
+.feature-desc{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.8}
+.feature-arrow{position:absolute;left:9px;bottom:10px;color:var(--gold);font-size:14px}
+.view{display:none}
+.view.active{display:block;animation:fadein .2s ease}
+@keyframes fadein{from{opacity:.6;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.panel{
+  padding:19px;border:1px solid var(--line);border-radius:13px;
+  background:linear-gradient(145deg,#151e2a,#0c1119);
+}
+.panel h3{margin-top:0;color:var(--gold2);font-size:16px}
+.panel p,.panel li{font-size:12px;line-height:2;color:#c5cad5}
+.panel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.panel-card{padding:13px;border:1px solid #ffffff13;border-radius:10px;background:#0b111a}
+.panel-card strong{display:block;font-size:12px;margin-bottom:6px}
+.panel-card p{margin:0;color:var(--muted);font-size:10px}
+.search,.field{
+  width:100%;margin:8px 0 13px;padding:11px;
+  border:1px solid var(--line);border-radius:8px;
+  color:var(--text);background:#0a1018;font-size:12px;
+}
+.footer{
+  padding:32px 10px 15px;text-align:center;
+  color:var(--muted);font-size:10px;line-height:2.2;
+}
+.footer strong{color:var(--gold)}
+.toast{
+  position:fixed;bottom:18px;left:18px;z-index:50;
+  display:none;max-width:calc(100% - 36px);
+  padding:12px 15px;border:1px solid var(--line);
+  border-radius:9px;background:#17202c;color:var(--gold2);
+  box-shadow:0 8px 30px #0008;font-size:11px;line-height:1.8;
+}
+.toast.show{display:block}
+.backdrop{display:none}
+body.light{
+  --bg:#e9e5dc;--panel:#fffaf0;--panel2:#f2eadc;
+  --text:#24252a;--muted:#686b75;--line:rgba(132,92,35,.35);
+}
+body.light .sidebar,body.light .topbar{background:rgba(245,239,227,.97)}
+body.light .nav button{color:#34343b}
+body.light .nav button.active{color:#805620}
+body.light .stat,body.light .panel,body.light .alerts,
+body.light .feature,body.light .owner{background:#f8f2e8}
+body.light .panel p,body.light .panel li{color:#42434a}
+body.light .hero{color:#fff}
+@media(max-width:1050px){
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .sidebar{
+    width:min(285px,86vw);
+    transform:translateX(105%);
+    transition:transform .25s;
+    box-shadow:-20px 0 40px #0008;
+  }
+  body.menu-open .sidebar{transform:translateX(0)}
+  .backdrop{
+    position:fixed;inset:0;z-index:15;
+    background:#0009;
+  }
+  body.menu-open .backdrop{display:block}
+  .main{margin-right:0}
+  .topbar{min-height:56px;padding:10px 12px}
+  .mobile-menu{display:inline-block}
+  .topbar small{display:none}
+  .content{padding:12px}
+  .hero{min-height:205px;padding:18px}
+  .hero p{font-size:11px}
+  .stats{gap:8px}
+  .stat{padding:10px}
+  .stat-number{font-size:22px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .feature-art{height:83px;font-size:33px}
+  .feature{min-height:145px}
+  .panel{padding:14px}
+  .panel-grid{grid-template-columns:1fr}
+  .alert-row{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+
+<body>
+<div class="backdrop" id="backdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">❖</div>
+    <h1>حبر وخيال</h1>
+    <p>INK & IMAGINATION</p>
+  </div>
+
+  <div class="owner">
+    <div class="avatar">✒</div>
+    <div>
+      <strong data-ar="مالك الموقع" data-en="Site Owner">مالك الموقع</strong>
+      <small data-ar="لوحة الإدارة" data-en="Owner Dashboard">لوحة الإدارة</small>
+    </div>
+  </div>
+
+  <nav class="nav" id="navigation">
+    <button class="active" data-view="home"><span class="ico">⌂</span><span data-ar="الرئيسية" data-en="Dashboard">الرئيسية</span></button>
+    <button data-view="stories"><span class="ico">▤</span><span data-ar="القصص والفصول" data-en="Stories & Chapters">القصص والفصول</span></button>
+    <button data-view="design"><span class="ico">✧</span><span data-ar="تصميم الموقع" data-en="Website Design">تصميم الموقع</span></button>
+    <button data-view="members"><span class="ico">♙</span><span data-ar="الأعضاء والكتّاب" data-en="Members & Writers">الأعضاء والكتّاب</span></button>
+    <button data-view="announcements"><span class="ico">♧</span><span data-ar="الإعلانات والإشعارات" data-en="Announcements">الإعلانات والإشعارات</span></button>
+    <button data-view="media"><span class="ico">▧</span><span data-ar="الملفات والتصنيفات" data-en="Media & Categories">الملفات والتصنيفات</span></button>
+    <button data-view="backups"><span class="ico">▣</span><span data-ar="النسخ الاحتياطية" data-en="Backups">النسخ الاحتياطية</span></button>
+    <button data-view="security"><span class="ico">♢</span><span data-ar="الأمان والإدارة" data-en="Security & Admin">الأمان والإدارة</span></button>
+    <button data-view="settings"><span class="ico">⚙</span><span data-ar="الإعدادات العامة" data-en="General Settings">الإعدادات العامة</span></button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button id="previewSite">↗ <span data-ar="معاينة الموقع العام" data-en="Preview Public Site">معاينة الموقع العام</span></button>
+    <button id="helpButton">؟ <span data-ar="المساعدة" data-en="Help">المساعدة</span></button>
+    <button id="logoutButton">⇥ <span data-ar="تسجيل الخروج" data-en="Sign Out">تسجيل الخروج</span></button>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="pill mobile-menu" id="menuButton" aria-label="فتح القائمة">☰</button>
+      <small data-ar="مساحة المالك الخاصة" data-en="Owner Workspace">مساحة المالك الخاصة</small>
+    </div>
+    <div class="top-actions">
+      <button class="pill" id="languageButton">AR / EN</button>
+      <button class="pill" id="themeButton" aria-label="تبديل المظهر">☼</button>
+      <button class="pill" id="noticeButton">♧ <span>!</span></button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <section class="view active" id="view-home">
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow" data-ar="عالمك الإبداعي يبدأ هنا" data-en="YOUR CREATIVE WORLD BEGINS HERE">عالمك الإبداعي يبدأ هنا</div>
+          <h2 data-ar="مرحبًا بك يا مالك" data-en="Welcome, Creator">مرحبًا بك يا مالك</h2>
+          <p data-ar="من هنا تدير حكاياتك، وتنظم عوالمك الخيالية، وتعتني بكل تفاصيل منصتك." data-en="Manage your stories, organize your fantasy worlds, and shape every detail of your platform.">من هنا تدير حكاياتك، وتنظم عوالمك الخيالية، وتعتني بكل تفاصيل منصتك.</p>
+          <div class="quote" data-ar="«كل قصة تبدأ بفكرة، وكل فكرة تستحق أن تُروى»" data-en="“Every story begins with an idea worth telling.”">«كل قصة تبدأ بفكرة، وكل فكرة تستحق أن تُروى»</div>
+          <div class="hero-actions">
+            <button class="btn primary" data-goto="stories" data-ar="إدارة القصص" data-en="Manage Stories">إدارة القصص</button>
+            <button class="btn" id="heroPreview" data-ar="معاينة الموقع" data-en="Preview Website">معاينة الموقع</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="stat-top"><span class="stat-label" data-ar="القصص" data-en="Stories">القصص</span><span class="stat-icon">▤</span></div><div class="stat-number">—</div><div class="stat-note" data-ar="بانتظار ربط البيانات" data-en="Awaiting database">بانتظار ربط البيانات</div></div>
+        <div class="stat"><div class="stat-top"><span class="stat-label" data-ar="الأعضاء" data-en="Members">الأعضاء</span><span class="stat-icon">♙</span></div><div class="stat-number">—</div><div class="stat-note" data-ar="بانتظار ربط البيانات" data-en="Awaiting database">بانتظار ربط البيانات</div></div>
+        <div class="stat"><div class="stat-top"><span class="stat-label" data-ar="البلاغات" data-en="Reports">البلاغات</span><span class="stat-icon">⚑</span></div><div class="stat-number">—</div><div class="stat-note" data-ar="بانتظار ربط البيانات" data-en="Awaiting database">بانتظار ربط البيانات</div></div>
+        <div class="stat"><div class="stat-top"><span class="stat-label" data-ar="طلبات الكتّاب" data-en="Writer Requests">طلبات الكتّاب</span><span class="stat-icon">✎</span></div><div class="stat-number">—</div><div class="stat-note" data-ar="بانتظار ربط البيانات" data-en="Awaiting database">بانتظار ربط البيانات</div></div>
+      </div>
+
+      <div class="section-head">
+        <h3 data-ar="الإشعارات الإدارية" data-en="Administrative Alerts">الإشعارات الإدارية</h3>
+        <small data-ar="حالة تجهيز المنصة" data-en="Platform setup status">حالة تجهيز المنصة</small>
+      </div>
+      <div class="alerts">
+        <div class="alert-title"><strong data-ar="متابعة مهام المنصة" data-en="Platform Tasks">متابعة مهام المنصة</strong><span class="stat-label" data-ar="مرحلة الواجهة" data-en="Interface Phase">مرحلة الواجهة</span></div>
+        <div class="alert-row"><span class="alert-dot"></span><span data-ar="لوحة الإدارة غير مرتبطة بقاعدة البيانات بعد." data-en="The dashboard is not connected to the database yet.">لوحة الإدارة غير مرتبطة بقاعدة البيانات بعد.</span><time>—</time></div>
+        <div class="alert-row"><span class="alert-dot"></span><span data-ar="يجب تفعيل تسجيل الدخول والتحقق من صلاحيات المالك قبل العمليات الحساسة." data-en="Owner authentication must be configured before sensitive actions.">يجب تفعيل تسجيل الدخول والتحقق من صلاحيات المالك قبل العمليات الحساسة.</span><time>—</time></div>
+        <div class="alert-row"><span class="alert-dot"></span><span data-ar="خدمة النسخ الاحتياطي المجدول لم تُجهز بعد." data-en="Scheduled backup service is not configured yet.">خدمة النسخ الاحتياطي المجدول لم تُجهز بعد.</span><time>—</time></div>
+      </div>
+
+      <div class="section-head">
+        <h3 data-ar="أقسام عالمك" data-en="Your Workspace">أقسام عالمك</h3>
+        <small data-ar="اختر قسمًا" data-en="Choose a section">اختر قسمًا</small>
+      </div>
+      <div class="cards" id="featureCards"></div>
+
+      <div class="footer">
+        <strong>حبر وخيال — Ink & Imagination</strong>
+        <div data-ar="«لا نكتب القصص فقط، بل نصنع عوالم جديدة»" data-en="“We do not only write stories; we create new worlds.”">«لا نكتب القصص فقط، بل نصنع عوالم جديدة»</div>
+        <div data-ar="واجهة أولية — الخدمات غير مربوطة بعد" data-en="Initial interface — backend not connected yet">واجهة أولية — الخدمات غير مربوطة بعد</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-stories">
+      <div class="section-head"><h3 data-ar="مكتبة القصص والفصول" data-en="Stories & Chapters Library">مكتبة القصص والفصول</h3></div>
+      <div class="panel">
+        <h3 data-ar="إدارة عوالمك المكتوبة" data-en="Manage Your Written Worlds">إدارة عوالمك المكتوبة</h3>
+        <p data-ar="سيضم هذا القسم إنشاء القصص، وتحرير الملخصات والفصول، ورفع الأغلفة، وإدارة المسودات والنشر والجدولة والإصدارات السابقة وسلة المحذوفات." data-en="This section will support story creation, chapter editing, cover uploads, drafts, publishing, scheduling, version history, and trash recovery.">سيضم هذا القسم إنشاء القصص، وتحرير الملخصات والفصول، ورفع الأغلفة، وإدارة المسودات والنشر والجدولة والإصدارات السابقة وسلة المحذوفات.</p>
+        <input class="search" data-placeholder-ar="ابحث عن قصة أو فصل..." data-placeholder-en="Search stories or chapters..." placeholder="ابحث عن قصة أو فصل...">
+        <button class="btn primary" data-demo="story" data-ar="+ إنشاء قصة جديدة" data-en="+ Create Story">+ إنشاء قصة جديدة</button>
+        <button class="btn" data-demo="drafts" data-ar="المسودات" data-en="Drafts">المسودات</button>
+        <button class="btn" data-demo="trash" data-ar="سلة المحذوفات" data-en="Trash">سلة المحذوفات</button>
+        <p class="stat-label" data-ar="هذه الأزرار واجهة أولية؛ لن تحفظ قصصًا حتى يتم ربط قاعدة البيانات." data-en="These are interface controls; story saving requires database integration.">هذه الأزرار واجهة أولية؛ لن تحفظ قصصًا حتى يتم ربط قاعدة البيانات.</p>
+      </div>
+    </section>
+
+    <section class="view" id="view-design">
+      <div class="section-head"><h3 data-ar="تصميم الموقع" data-en="Website Design">تصميم الموقع</h3></div>
+      <div class="panel">
+        <h3 data-ar="اصنع مظهر منصتك" data-en="Shape Your Platform">اصنع مظهر منصتك</h3>
+        <p data-ar="سيتيح هذا القسم تعديل الألوان والخلفيات والشعار ونصوص الصفحات وترتيب الأقسام والبطاقات، مع معاينة التغييرات قبل نشرها." data-en="Customize colors, backgrounds, logos, page text, section order, and cards, with preview before publishing.">سيتيح هذا القسم تعديل الألوان والخلفيات والشعار ونصوص الصفحات وترتيب الأقسام والبطاقات، مع معاينة التغييرات قبل نشرها.</p>
+        <div class="panel-grid">
+          <div class="panel-card"><strong data-ar="🎨 الهوية والألوان" data-en="🎨 Branding & Colors">🎨 الهوية والألوان</strong><p data-ar="الألوان والخطوط والخلفيات" data-en="Colors, fonts, backgrounds">الألوان والخطوط والخلفيات</p></div>
+          <div class="panel-card"><strong data-ar="▤ الصفحات والأقسام" data-en="▤ Pages & Sections">▤ الصفحات والأقسام</strong><p data-ar="المحتوى والترتيب والظهور" data-en="Content, order, visibility">المحتوى والترتيب والظهور</p></div>
+          <div class="panel-card"><strong data-ar="▣ المعاينة والنشر" data-en="▣ Preview & Publish">▣ المعاينة والنشر</strong><p data-ar="مراجعة التعديلات قبل إتاحتها" data-en="Review changes before publishing">مراجعة التعديلات قبل إتاحتها</p></div>
+          <div class="panel-card"><strong data-ar="✎ النصوص والشعار" data-en="✎ Text & Logo">✎ النصوص والشعار</strong><p data-ar="الاسم والوصف والعناوين" data-en="Name, description, headings">الاسم والوصف والعناوين</p></div>
+        </div>
+        <p><button class="btn" data-demo="design" data-ar="فتح أدوات التخصيص" data-en="Open Customization Tools">فتح أدوات التخصيص</button></p>
+      </div>
+    </section>
+
+    <section class="view" id="view-members">
+      <div class="section-head"><h3 data-ar="الأعضاء والكتّاب" data-en="Members & Writers">الأعضاء والكتّاب</h3></div>
+      <div class="panel">
+        <h3 data-ar="إدارة مجتمع حبر وخيال" data-en="Manage Your Community">إدارة مجتمع حبر وخيال</h3>
+        <p data-ar="سيشمل هذا القسم البحث عن الأعضاء ومراجعة طلبات الكتّاب والبلاغات وطلبات حذف الحسابات، مع حماية البيانات الخاصة ومنع منح صلاحيات المالك للأعضاء." data-en="Manage members, writer applications, reports, and account deletion requests while protecting private data and restricting owner privileges.">سيشمل هذا القسم البحث عن الأعضاء ومراجعة طلبات الكتّاب والبلاغات وطلبات حذف الحسابات، مع حماية البيانات الخاصة ومنع منح صلاحيات المالك للأعضاء.</p>
+        <input class="search" data-placeholder-ar="ابحث عن عضو..." data-placeholder-en="Search members..." placeholder="ابحث عن عضو...">
+        <button class="btn" data-demo="members" data-ar="طلبات الكتّاب" data-en="Writer Requests">طلبات الكتّاب</button>
+        <button class="btn" data-demo="reports" data-ar="البلاغات" data-en="Reports">البلاغات</button>
+        <button class="btn" data-demo="deletions" data-ar="طلبات حذف الحسابات" data-en="Account Deletion Requests">طلبات حذف الحسابات</button>
+      </div>
+    </section>
+
+    <section class="view" id="view-announcements">
+      <div class="section-head"><h3 data-ar="الإعلانات والإشعارات" data-en="Announcements & Notifications">الإعلانات والإشعارات</h3></div>
+      <div class="panel">
+        <h3 data-ar="رسائلك إلى القراء" data-en="Messages to Your Readers">رسائلك إلى القراء</h3>
+        <p data-ar="إنشاء إعلانات عربية وإنجليزية، وجدولة ظهورها، وإرسال إشعارات داخل الموقع. إشعارات الهاتف تحتاج إلى موافقة المستخدم وخدمة إرسال مناسبة." data-en="Create bilingual announcements, schedule visibility, and send in-site notifications. Push notifications require user consent and a delivery service.">إنشاء إعلانات عربية وإنجليزية، وجدولة ظهورها، وإرسال إشعارات داخل الموقع. إشعارات الهاتف تحتاج إلى موافقة المستخدم وخدمة إرسال مناسبة.</p>
+        <button class="btn primary" data-demo="announcement" data-ar="إنشاء إعلان" data-en="Create Announcement">إنشاء إعلان</button>
+        <button class="btn" data-demo="notifications" data-ar="إدارة الإشعارات" data-en="Manage Notifications">إدارة الإشعارات</button>
+      </div>
+    </section>
+
+    <section class="view" id="view-media">
+      <div class="section-head"><h3 data-ar="الملفات والتصنيفات" data-en="Media & Categories">الملفات والتصنيفات</h3></div>
+      <div class="panel">
+        <h3 data-ar="خزائن الصور والقصص" data-en="Media Library">خزائن الصور والقصص</h3>
+        <p data-ar="رفع الأغلفة من الهاتف، وإدارة الصور والملفات والتصنيفات والوسوم، مع ضبط صلاحيات التخزين وحدوده." data-en="Upload covers from your phone, manage files, categories, and tags with storage limits and access controls.">رفع الأغلفة من الهاتف، وإدارة الصور والملفات والتصنيفات والوسوم، مع ضبط صلاحيات التخزين وحدوده.</p>
+        <button class="btn primary" data-demo="upload" data-ar="رفع ملف" data-en="Upload File">رفع ملف</button>
+        <button class="btn" data-demo="categories" data-ar="إدارة التصنيفات" data-en="Manage Categories">إدارة التصنيفات</button>
+        <button class="btn" data-demo="tags" data-ar="إدارة الوسوم" data-en="Manage Tags">إدارة الوسوم</button>
+      </div>
+    </section>
+
+    <section class="view" id="view-backups">
+      <div class="section-head"><h3 data-ar="النسخ الاحتياطية" data-en="Backups">النسخ الاحتياطية</h3></div>
+      <div class="panel">
+        <h3 data-ar="أرشيف عوالمك المحمي" data-en="Your Protected Archive">أرشيف عوالمك المحمي</h3>
+        <p data-ar="سيعرض هذا القسم حالة النسخ اليومية وإصدارات القصص والأغلفة وخيارات الاستعادة والحذف اليدوي. النسخ الآلي يحتاج إلى خدمة خلفية مجدولة وتخزين آمن." data-en="View daily backup status, story and cover versions, restoration, and manual deletion. Automated backups require a scheduled backend service and secure storage.">سيعرض هذا القسم حالة النسخ اليومية وإصدارات القصص والأغلفة وخيارات الاستعادة والحذف اليدوي. النسخ الآلي يحتاج إلى خدمة خلفية مجدولة وتخزين آمن.</p>
+        <button class="btn" data-demo="backup" data-ar="عرض حالة النسخ" data-en="View Backup Status">عرض حالة النسخ</button>
+      </div>
+    </section>
+
+    <section class="view" id="view-security">
+      <div class="section-head"><h3 data-ar="الأمان والإدارة" data-en="Security & Admin">الأمان والإدارة</h3></div>
+      <div class="panel">
+        <h3 data-ar="حماية لوحة المالك" data-en="Protect the Owner Dashboard">حماية لوحة المالك</h3>
+        <p data-ar="سيشمل الربط التحقق من هوية المالك من جهة الخادم، وسجل العمليات الإدارية، وإدارة الجلسة، وحماية المفاتيح والبيانات الحساسة." data-en="Integration will enforce server-side owner checks, audit logs, session management, and protection of secrets and sensitive data.">سيشمل الربط التحقق من هوية المالك من جهة الخادم، وسجل العمليات الإدارية، وإدارة الجلسة، وحماية المفاتيح والبيانات الحساسة.</p>
+        <div class="panel-card"><strong data-ar="حالة الربط" data-en="Integration Status">حالة الربط</strong><p data-ar="لم يتم تفعيل تسجيل الدخول في هذه المرحلة." data-en="Authentication has not been enabled in this phase.">لم يتم تفعيل تسجيل الدخول في هذه المرحلة.</p></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-settings">
+      <div class="section-head"><h3 data-ar="الإعدادات العامة" data-en="General Settings">الإعدادات العامة</h3></div>
+      <div class="panel">
+        <h3 data-ar="إعدادات المنصة" data-en="Platform Settings">إعدادات المنصة</h3>
+        <p data-ar="ستتمكن من إدارة اسم الموقع ولغاته والميزات المتاحة وتفضيلات الإدارة. حفظ الإعدادات بصورة دائمة يتطلب ربط قاعدة البيانات." data-en="Manage the site name, languages, features, and admin preferences. Persistent settings require database integration.">ستتمكن من إدارة اسم الموقع ولغاته والميزات المتاحة وتفضيلات الإدارة. حفظ الإعدادات بصورة دائمة يتطلب ربط قاعدة البيانات.</p>
+        <button class="btn" data-demo="settings" data-ar="إعدادات اللغة والميزات" data-en="Language & Feature Settings">إعدادات اللغة والميزات</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+const featureData = [
+  {
+    id:"stories", icon:"📚",
+    ar:"القصص والفصول", en:"Stories & Chapters",
+    descAr:"مكتبة العوالم والكتابة والنشر",
+    descEn:"Write, organize and publish"
+  },
+  {
+    id:"design", icon:"🏰",
+    ar:"تصميم الموقع", en:"Website Design",
+    descAr:"الألوان والصفحات وبوابة العوالم",
+    descEn:"Colors, pages and visual identity"
+  },
+  {
+    id:"members", icon:"🧙",
+    ar:"الأعضاء والكتّاب", en:"Members & Writers",
+    descAr:"رابطة المبدعين والطلبات",
+    descEn:"Creators and applications"
+  },
+  {
+    id:"announcements", icon:"🏮",
+    ar:"الإعلانات والإشعارات", en:"Announcements",
+    descAr:"رسائل المملكة والتنبيهات",
+    descEn:"Announcements and notifications"
+  },
+  {
+    id:"media", icon:"🖼️",
+    ar:"الملفات والتصنيفات", en:"Media & Categories",
+    descAr:"خزائن الصور والأغلفة والوسوم",
+    descEn:"Images, covers and tags"
+  },
+  {
+    id:"backups", icon:"🗝️",
+    ar:"النسخ الاحتياطية", en:"Backups",
+    descAr:"الأرشيف المحمي والاستعادة",
+    descEn:"Protected archive and restore"
+  },
+  {
+    id:"security", icon:"🛡️",
+    ar:"الأمان والإدارة", en:"Security & Admin",
+    descAr:"درع الحماية وسجل العمليات",
+    descEn:"Access controls and audit logs"
+  },
+  {
+    id:"settings", icon:"⚙️",
+    ar:"الإعدادات العامة", en:"General Settings",
+    descAr:"تحكم في عالمك والميزات",
+    descEn:"Platform settings and features"
+  }
+];
+
+const toast = document.getElementById("toast");
+let currentLanguage = "ar";
+let toastTimeout;
+
+function showToast(ar, en) {
+  toast.textContent = currentLanguage === "ar" ? ar : en;
+  toast.classList.add("show");
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove("show"), 3200);
+}
+
+function renderCards() {
+  const container = document.getElementById("featureCards");
+  container.replaceChildren();
+
+  featureData.forEach(item => {
+    const button = document.createElement("button");
+    button.className = "feature";
+    button.type = "button";
+    button.dataset.goto = item.id;
+
+    const art = document.createElement("div");
+    art.className = "feature-art";
+    const icon = document.createElement("span");
+    icon.textContent = item.icon;
+    art.appendChild(icon);
+
+    const body = document.createElement("div");
+    body.className = "feature-body";
+
+    const title = document.createElement("span");
+    title.className = "feature-title";
+    title.dataset.ar = item.ar;
+    title.dataset.en = item.en;
+    title.textContent = currentLanguage === "ar" ? item.ar : item.en;
+
+    const desc = document.createElement("span");
+    desc.className = "feature-desc";
+    desc.dataset.ar = item.descAr;
+    desc.dataset.en = item.descEn;
+    desc.textContent = currentLanguage === "ar" ? item.descAr : item.descEn;
+
+    const arrow = document.createElement("span");
+    arrow.className = "feature-arrow";
+    arrow.textContent = currentLanguage === "ar" ? "←" : "→";
+
+    body.append(title, desc);
+    button.append(art, body, arrow);
+    container.appendChild(button);
+  });
+}
+
+function openView(viewName) {
+  const target = document.getElementById("view-" + viewName);
+  if (!target) {
+    showToast("هذا القسم غير موجود.", "This section was not found.");
+    return;
+  }
+
+  document.querySelectorAll(".view").forEach(view => {
+    view.classList.toggle("active", view === target);
+  });
+
+  document.querySelectorAll("[data-view]").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === viewName);
+  });
+
+  document.body.classList.remove("menu-open");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function setLanguage(language) {
+  currentLanguage = language;
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+
+  document.querySelectorAll("[data-ar][data-en]").forEach(element => {
+    element.textContent = element.dataset[language];
+  });
+
+  document.querySelectorAll("[data-placeholder-ar][data-placeholder-en]").forEach(element => {
+    element.placeholder = element.dataset[
+      language === "ar" ? "placeholderAr" : "placeholderEn"
+    ];
+  });
+
+  document.getElementById("languageButton").textContent =
+    language === "ar" ? "AR / EN" : "EN / AR";
+
+  document.getElementById("menuButton").setAttribute(
+    "aria-label",
+    language === "ar" ? "فتح القائمة" : "Open menu"
+  );
+
+  renderCards();
+}
+
+document.getElementById("navigation").addEventListener("click", event => {
+  const button = event.target.closest("[data-view]");
+  if (button) openView(button.dataset.view);
+});
+
+document.addEventListener("click", event => {
+  const gotoButton = event.target.closest("[data-goto]");
+  if (gotoButton) {
+    openView(gotoButton.dataset.goto);
+    return;
+  }
+
+  const demoButton = event.target.closest("[data-demo]");
+  if (demoButton) {
+    showToast(
+      "هذه واجهة أولية. سنفعّل هذه الوظيفة بعد ربط قاعدة البيانات والخدمات.",
+      "Preview interface only. This function requires backend integration."
+    );
+  }
+});
+
+document.getElementById("languageButton").addEventListener("click", () => {
+  setLanguage(currentLanguage === "ar" ? "en" : "ar");
+});
+
+document.getElementById("themeButton").addEventListener("click", () => {
+  document.body.classList.toggle("light");
+  showToast(
+    document.body.classList.contains("light") ? "تم تشغيل المظهر الفاتح." : "تمت العودة إلى المظهر الداكن.",
+    document.body.classList.contains("light") ? "Light appearance enabled." : "Dark appearance restored."
+  );
+});
+
+function toggleMenu() {
+  document.body.classList.toggle("menu-open");
+}
+
+document.getElementById("menuButton").addEventListener("click", toggleMenu);
+document.getElementById("backdrop").addEventListener("click", toggleMenu);
+
+document.getElementById("noticeButton").addEventListener("click", () => {
+  openView("home");
+  showToast(
+    "ستظهر هنا الإشعارات الإدارية الفعلية بعد ربط قاعدة البيانات.",
+    "Administrative alerts will appear here after database integration."
+  );
+});
+
+function previewSite() {
+  showToast(
+    "سنربط هذا الزر بعنوان الموقع العام في مرحلة الربط.",
+    "The public website link will be configured during integration."
+  );
+}
+
+document.getElementById("previewSite").addEventListener("click", previewSite);
+document.getElementById("heroPreview").addEventListener("click", previewSite);
+
+document.getElementById("helpButton").addEventListener("click", () => {
+  showToast(
+    "اختر قسمًا من القائمة. وظائف الإدارة الحقيقية ستُفعّل بعد الربط الآمن.",
+    "Choose a section. Real admin actions will be enabled after secure integration."
+  );
+});
+
+document.getElementById("logoutButton").addEventListener("click", () => {
+  showToast(
+    "لم يتم إعداد جلسة تسجيل الدخول بعد؛ لم يحدث تسجيل خروج فعلي.",
+    "Authentication is not configured yet; no actual sign-out occurred."
+  );
+});
+
+renderCards();
+setLanguage("ar");
+</script>
+</body>
+</html>
